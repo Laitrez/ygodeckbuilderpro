@@ -26,10 +26,10 @@ export const getCard = async (id) => {
   }
 };
 
-export const getCardCont = async (page, context) => {
+export const getCardCont = async () => {
   try {
     const response = await axios.get(
-      `127.0.0.1:8000/api/cards`
+      `http://127.0.0.1:8000/api/cards/paginated`
     );
 
     return response.data;
