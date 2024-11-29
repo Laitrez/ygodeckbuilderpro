@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../services/api";
+import { BNext,BPrev } from "./BoutonPage";
+import store from "../store";
+
+
 
 const Cardlist = () => {
   const [cards, setCards] = useState([]);
@@ -11,7 +15,7 @@ const Cardlist = () => {
     try {
       let fetchedCards;
       if (searchTerme) {
-        fetchedCards = await api.get(searchTerme, page, context);
+        fetchedCards = await api.getBySearch(searchTerme, page, 30);
       } else if (context) {
         page === undefined
           ? (fetchedCards = await api.getCard(1, context))
@@ -19,9 +23,9 @@ const Cardlist = () => {
       } else {
         page === undefined
           ? (fetchedCards = await api.getCardCont())
-          : (fetchedCards = await api.getCard(page));
+          : (fetchedCards = await api.getCardCont(page, 30));
       }
-      console.log("fetchedCards : ", fetchedCards);
+      // console.log("fetchedCards : ", fetchedCards);
       setCards(fetchedCards);
       setError(false);
     } catch (error) {
@@ -30,12 +34,12 @@ const Cardlist = () => {
   }
 
   useEffect(() => {
-    //   const unsubscribe = store.subscribe(() => {
-    //     const { value, page, context } = store.getState().search;
-    //     fetchCard(value, page, context);
-    //   });
+      const unsubscribe = store.subscribe(() => { 
+        const { value, page, context } = store.getState().search;
+        fetchCard(value, page, context);
+      });
     fetchCard();
-    //   return () => unsubscribe();
+      return () => unsubscribe();
   }, []);
 
   const Card = ({ card }) => {
@@ -93,8 +97,8 @@ const Cardlist = () => {
       </div>
 
       <div className="flex justify-between p-4 w-56 ">
-        <button className="btn btn-primary">Primary</button>
-        <button className="btn btn-primary">Primary</button>
+        <BPrev/>
+        <BNext/>
       </div>
     </div>
   );
