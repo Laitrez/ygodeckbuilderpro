@@ -32,9 +32,11 @@ const Cardlist = () => {
       // setCards(fetchedCards);
 
       // fetchedCards.total?setTotal(fetchedCards.total):setTotal(10);
+      // console.log('Fetched Cards:', fetchedCards);
       setCards(fetchedCards.cards);
       setTotal(fetchedCards.totalPages);
-      // console.log('total :', total);
+      // console.log('Total pages:', fetchedCards.totalPages);
+      // console.log(typeof(total));
       // console.log(fetchCard);
       setError(false);
     } catch (error) {
