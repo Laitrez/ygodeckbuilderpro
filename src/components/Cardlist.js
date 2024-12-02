@@ -9,6 +9,7 @@ import store from "../store";
 const Cardlist = () => {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(false);
+  const [total,setTotal]= useState(0);
   // test context----------------------------------------
 
   async function fetchCard(searchTerme, page, context) {
@@ -22,11 +23,19 @@ const Cardlist = () => {
           : (fetchedCards = await api.getCard(page, context));
       } else {
         page === undefined
-          ? (fetchedCards = await api.getCardCont())
-          : (fetchedCards = await api.getCardCont(page, 30));
+          ? (fetchedCards = await api.getCardPaginated())
+          : (fetchedCards = await api.getCardPaginated(page, 30));
       }
       // console.log("fetchedCards : ", fetchedCards);
-      setCards(fetchedCards);
+      // solution temporaire (modifier la reception api pour recuperer les totaux peux importe le fetch )
+      // fetchedCards.cards?setCards(fetchedCards.cards):
+      // setCards(fetchedCards);
+
+      // fetchedCards.total?setTotal(fetchedCards.total):setTotal(10);
+      setCards(fetchedCards.cards);
+      setTotal(fetchedCards.totalPages);
+      // console.log('total :', total);
+      // console.log(fetchCard);
       setError(false);
     } catch (error) {
       setError(true);
@@ -97,8 +106,8 @@ const Cardlist = () => {
       </div>
 
       <div className="flex justify-between p-4 w-56 ">
-        <BPrev/>
-        <BNext/>
+        <BPrev pageMax={total}/>
+        <BNext pageMax={total}/>
       </div>
     </div>
   );

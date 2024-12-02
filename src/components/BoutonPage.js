@@ -7,13 +7,13 @@ import { setPage } from "../services/ygo.reducer";
 
         {/* <button className="btn btn-primary">Primary</button> */}
         {/* <button className="btn btn-primary">Primary</button> */}
-export const BNext = () => {
+export const BNext = (pageMax) => {
   let page = useSelector((state) => state.search.page);
   const dispatch = useDispatch();
-  useEffect(() => console.log('page : ',page));
+  // useEffect(() => console.log('page : ',pageMax.pageMax));
   let payload = {
     pageTest: page + 1,
-    pageMax: 10,
+    pageMax: pageMax,
   };
   return (
     <button
@@ -27,12 +27,12 @@ export const BNext = () => {
 };
 
 //
-export const BPrev = () => {
+export const BPrev = (pageMax) => {
   let page = useSelector((state) => state.search.page);
   const dispatch = useDispatch();
   let pagination = {
     pageTest: page - 1,
-    pageMax: 10,
+    pageMax: pageMax,
   };
   return (
     <button

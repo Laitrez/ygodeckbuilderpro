@@ -16,7 +16,7 @@ export const getBySearch = async (searchTerme, page, limit) => {
     
     
     );
-    console.log(response.data);
+    // console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error);
@@ -35,7 +35,7 @@ export const getCard = async (id) => {
   }
 };
 
-export const getCardCont = async (page=1, limit=30) => {
+export const getCardPaginated = async (page=1, limit=30) => {
   try {
     const response = await axios.get(
       `http://127.0.0.1:8000/api/cards/paginated/`,
@@ -46,7 +46,7 @@ export const getCardCont = async (page=1, limit=30) => {
         },
       }
     );
-
+    // console.log(response);
     return response.data;
   } catch (error) {
     throw new Error(error);
