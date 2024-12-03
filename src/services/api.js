@@ -16,7 +16,7 @@ export const getBySearch = async (searchTerme, page, limit) => {
     
     
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error);
@@ -46,7 +46,7 @@ export const getCardPaginated = async (page=1, limit=30) => {
         },
       }
     );
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error);

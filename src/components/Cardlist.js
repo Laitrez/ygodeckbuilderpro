@@ -10,6 +10,8 @@ const Cardlist = () => {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(false);
   const [total,setTotal]= useState(0);
+  const [currentPage,setCurrentPage]=useState(0);
+  const [searchPage,setSearchPage]=useState(0);
   // test context----------------------------------------
 
   async function fetchCard(searchTerme, page, context) {
@@ -17,14 +19,18 @@ const Cardlist = () => {
       let fetchedCards;
       if (searchTerme) {
         fetchedCards = await api.getBySearch(searchTerme, page, 30);
+        setSearchPage(fetchedCards.currentPage);
+        // console.log('search page ',fetchedCards.currentPage);
       } else if (context) {
         page === undefined
-          ? (fetchedCards = await api.getCard(1, context))
-          : (fetchedCards = await api.getCard(page, context));
+        ? (fetchedCards = await api.getCard(1, context))
+        : (fetchedCards = await api.getCard(page, context));
       } else {
         page === undefined
-          ? (fetchedCards = await api.getCardPaginated())
-          : (fetchedCards = await api.getCardPaginated(page, 30));
+        ? (fetchedCards = await api.getCardPaginated())
+        : (fetchedCards = await api.getCardPaginated(page, 30));
+        setCurrentPage(fetchedCards.currentPage);
+        // console.log('current page ',fetchedCards.currentPage);
       }
       // console.log("fetchedCards : ", fetchedCards);
       // solution temporaire (modifier la reception api pour recuperer les totaux peux importe le fetch )
@@ -33,6 +39,7 @@ const Cardlist = () => {
 
       // fetchedCards.total?setTotal(fetchedCards.total):setTotal(10);
       // console.log('Fetched Cards:', fetchedCards);
+      console.log(`currentPage : ${currentPage} searchPage : ${searchPage} et la current page : ${fetchedCards.currentPage}`);
       setCards(fetchedCards.cards);
       setTotal(fetchedCards.totalPages);
       // console.log('Total pages:', fetchedCards.totalPages);
@@ -49,6 +56,7 @@ const Cardlist = () => {
         const { value, page, context } = store.getState().search;
         fetchCard(value, page, context);
       });
+      
     fetchCard();
       return () => unsubscribe();
   }, []);
@@ -72,6 +80,7 @@ const Cardlist = () => {
 
           <p>{card.desc}</p>
         </div> */}
+
       </a>
     );
   };
