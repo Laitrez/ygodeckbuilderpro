@@ -61,7 +61,7 @@ const Cardlist = () => {
       >
         <figure>
           <img
-            src={`https://images.ygoprodeck.com/images/cards/${card.ygo_id}.jpg`}
+            src={`https://images.ygoprodeck.com/images/cards_small/${card.ygo_id}.jpg`}
             alt={card.name}
             className="w-full h-full object-cover"
           />
