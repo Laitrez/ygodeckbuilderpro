@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPage } from "../services/ygo.reducer";
 import * as api from "../services/api";
-import { BNext, BPrev } from "./BoutonPage";
 
 const Cardlist = () => {
   const [cards, setCards] = useState([]);
@@ -13,10 +12,9 @@ const Cardlist = () => {
   const { value: searchTerm, page, context } = useSelector(
     (state) => state.search
   );
-
-  // Flag pour détecter la pagination manuelle
-  const [manualChange, setManualChange] = useState(false);
-  // Dernière page avant la recherche
+// Flag pour détecter la pagination manuelle
+  const [manualChange, setManualChange] = useState(false); 
+   // Dernière page avant la recherche
   const [lastNonSearchPage, setLastNonSearchPage] = useState(1);
 
   // Fonction pour récupérer les cartes depuis l'API
@@ -38,37 +36,57 @@ const Cardlist = () => {
     }
   }
 
-  // Premier useEffect pour gérer la recherche et la page courante
-  useEffect(() => {
-    if (searchTerm) {
-      // Si un terme de recherche est défini, on revient à la page 1
-      if (page !== 1) {
-        dispatch(setPage({ pageTest: 1, pageMax: total }));
-      }
-    } else {
-      // Sauvegarder la page courante avant une recherche
-      setLastNonSearchPage(page);
+ // Premier useEffect pour gérer la recherche et la page courante
+useEffect(() => {
+  if (searchTerm) {
+    // Si un terme de recherche est défini, on revient à la page 1
+    if (page !== 1) {
+      dispatch(setPage({ pageTest: 1, pageMax: total }));
     }
-    fetchCard(searchTerm, page, context);
-  }, [searchTerm, page, context, dispatch, total]);
+  } else {
+    // Sauvegarder la page courante avant une recherche
+    setLastNonSearchPage(page);
+  }
+  fetchCard(searchTerm, page, context);
+}, [searchTerm, page, context, dispatch, total]);
 
-  // Deuxième useEffect pour restaurer la page précédente lorsque la recherche est annulée
-  useEffect(() => {
-    if (!searchTerm && !manualChange && page !== lastNonSearchPage) {
-      console.log("Restoring page to last non-search page:", lastNonSearchPage);
-      dispatch(setPage({ pageTest: lastNonSearchPage, pageMax: total }));
-    }
-  }, [searchTerm, lastNonSearchPage, page, dispatch, total, manualChange]);
+// Deuxième useEffect pour restaurer la page précédente lorsque la recherche est annulée
+useEffect(() => {
+  if (!searchTerm && !manualChange && page !== lastNonSearchPage) {
+    console.log("Restoring page to last non-search page:", lastNonSearchPage);
+    dispatch(setPage({ pageTest: lastNonSearchPage, pageMax: total }));
+  }
+}, [searchTerm, lastNonSearchPage, page, dispatch, total, manualChange]);
 
-  useEffect(() => {
+// Nouveau useEffect pour remettre manualChange à false lorsque c'est nécessaire
+useEffect(() => {
   if (!searchTerm && manualChange) {
     setManualChange(false); // On repasse à un contexte non manuel
     console.log("manualChange reset to false");
   }
 }, [searchTerm, manualChange]);
 
-  // Fonction pour signaler un clic manuel
-  const handleManualChange = () => setManualChange(true);
+
+
+
+
+
+
+  // Fonction pour gérer la page suivante (manuelle)
+  const handleNext = () => {
+    if (page < total) {
+      setManualChange(true); // Indiquer que la pagination est manuelle
+      dispatch(setPage({ pageTest: page + 1, pageMax: total }));
+    }
+  };
+
+  // Fonction pour gérer la page précédente (manuelle)
+  const handlePrev = () => {
+    if (page > 1) {
+      setManualChange(true); // Indiquer que la pagination est manuelle
+      dispatch(setPage({ pageTest: page - 1, pageMax: total }));
+    }
+  };
 
   // Composant pour afficher les cartes
   const Card = ({ card }) => {
@@ -105,11 +123,26 @@ const Cardlist = () => {
       </div>
 
       <div className="flex justify-between p-4 w-56">
-        <BPrev pageMax={total} onClick={handleManualChange} />
-        <BNext pageMax={total} onClick={handleManualChange} />
+        <button
+          className="btn btn-primary"
+          onClick={handlePrev}
+          disabled={page <= 1}
+        >
+          Prev
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={handleNext}
+          disabled={page >= total}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
 };
 
 export default Cardlist;
+
+
+
