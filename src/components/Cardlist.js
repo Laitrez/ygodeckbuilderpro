@@ -1,71 +1,85 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setPage } from "../services/ygo.reducer";
 import * as api from "../services/api";
-import { BNext,BPrev } from "./BoutonPage";
-import store from "../store";
-
-
 
 const Cardlist = () => {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(false);
-  const [total,setTotal]= useState(0);
-  const [currentPage,setCurrentPage]=useState(0);
-  const [searchPage,setSearchPage]=useState(0);
-  // test context----------------------------------------
+  const [total, setTotal] = useState(0);
 
-  async function fetchCard(searchTerme, page, context) {
+  const dispatch = useDispatch();
+  const { value: searchTerm, page, context } = useSelector(
+    (state) => state.search
+  );
+// Flag pour détecter la pagination manuelle
+  const [manualChange, setManualChange] = useState(false); 
+   // Dernière page avant la recherche
+  const [lastNonSearchPage, setLastNonSearchPage] = useState(1);
+
+  // Fonction pour récupérer les cartes depuis l'API
+  async function fetchCard(searchTerm, page, context) {
     try {
       let fetchedCards;
-      if (searchTerme) {
-        fetchedCards = await api.getBySearch(searchTerme, page, 30);
-        setSearchPage(fetchedCards.currentPage);
-        // console.log('search page ',fetchedCards.currentPage);
+      if (searchTerm) {
+        fetchedCards = await api.getBySearch(searchTerm, page, 30);
       } else if (context) {
-        page === undefined
-        ? (fetchedCards = await api.getCard(1, context))
-        : (fetchedCards = await api.getCard(page, context));
+        fetchedCards = await api.getCard(page || 1, context);
       } else {
-        page === undefined
-        ? (fetchedCards = await api.getCardPaginated())
-        : (fetchedCards = await api.getCardPaginated(page, 30));
-        setCurrentPage(fetchedCards.currentPage);
-        // console.log('current page ',fetchedCards.currentPage);
+        fetchedCards = await api.getCardPaginated(page || 1, 30);
       }
-      // console.log("fetchedCards : ", fetchedCards);
-      // solution temporaire (modifier la reception api pour recuperer les totaux peux importe le fetch )
-      // fetchedCards.cards?setCards(fetchedCards.cards):
-      // setCards(fetchedCards);
-
-      // fetchedCards.total?setTotal(fetchedCards.total):setTotal(10);
-      // console.log('Fetched Cards:', fetchedCards);
-      console.log(`currentPage : ${currentPage} searchPage : ${searchPage} et la current page : ${fetchedCards.currentPage}`);
       setCards(fetchedCards.cards);
       setTotal(fetchedCards.totalPages);
-      // console.log('Total pages:', fetchedCards.totalPages);
-      // console.log(typeof(total));
-      // console.log(fetchCard);
       setError(false);
     } catch (error) {
       setError(true);
     }
   }
 
+  // Premier useEffect pour gérer la recherche et la page courante
   useEffect(() => {
-      const unsubscribe = store.subscribe(() => { 
-        const { value, page, context } = store.getState().search;
-        fetchCard(value, page, context);
-      });
-      
-    fetchCard();
-      return () => unsubscribe();
-  }, []);
+    if (searchTerm) {
+      // Si un terme de recherche est défini, on revient à la page 1
+      if (page !== 1) {
+        dispatch(setPage({ pageTest: 1, pageMax: total }));
+      }
+    } else {
+      // Sauvegarder la page courante avant une recherche
+      setLastNonSearchPage(page);
+    }
+    fetchCard(searchTerm, page, context);
+  }, [searchTerm, page, context, dispatch, total]);
 
+  // Deuxième useEffect pour restaurer la page précédente lorsque la recherche est annulée
+  useEffect(() => {
+    if (!searchTerm && !manualChange && page !== lastNonSearchPage) {
+      console.log("Restoring page to last non-search page:", lastNonSearchPage);
+      dispatch(setPage({ pageTest: lastNonSearchPage, pageMax: total }));
+    }
+  }, [searchTerm, lastNonSearchPage, page, dispatch, total, manualChange]);
+
+  // Fonction pour gérer la page suivante (manuelle)
+  const handleNext = () => {
+    if (page < total) {
+      setManualChange(true); // Indiquer que la pagination est manuelle
+      dispatch(setPage({ pageTest: page + 1, pageMax: total }));
+    }
+  };
+
+  // Fonction pour gérer la page précédente (manuelle)
+  const handlePrev = () => {
+    if (page > 1) {
+      setManualChange(true); // Indiquer que la pagination est manuelle
+      dispatch(setPage({ pageTest: page - 1, pageMax: total }));
+    }
+  };
+
+  // Composant pour afficher les cartes
   const Card = ({ card }) => {
     return (
       <a
-        href={Link || "#"}
-        className="card w-32 h-fit bg-base-100 shadow-xl m-3  hover:shadow-2xl transition-shadow "
+        href="#"
+        className="card w-32 h-fit bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
       >
         <figure>
           <img
@@ -74,51 +88,41 @@ const Cardlist = () => {
             className="w-full h-full object-cover"
           />
         </figure>
-
-        {/* <div className="card-body">
-          <h2 className="card-title">{card.name}</h2>
-
-          <p>{card.desc}</p>
-        </div> */}
-
       </a>
     );
   };
 
+  // Gestion des erreurs
   const Error = () => {
     if (error) return <p>Il y a une erreur</p>;
   };
 
   return (
-    // <div className="flex flex-col h-full">
-    // <div className="flex flex-wrap flex-grow justify-center">
-    //   <Error />
-    //   <div className="flex d-flex  flex-wrap justify-center ">
-    //     {cards.map((card) => (
-    //       <Card key={card.id} card={card} />
-    //     ))}
-    //   </div>
-    // </div>
-    //   <div className="flex w-56 justify-between">
-    //     <button className="btn btn-primary">Primary</button>
-    //     <button className="btn btn-primary">Primary</button>
-    //   </div>
-    // </div>
-
-    
     <div className="flex flex-col h-full justify-center items-center">
       <div className="flex-grow flex flex-wrap justify-center">
         <Error />
-        <div className="flex flex-wrap justify-center ">
+        <div className="flex flex-wrap justify-center">
           {cards.map((card) => (
             <Card key={card.id} card={card} />
           ))}
         </div>
       </div>
 
-      <div className="flex justify-between p-4 w-56 ">
-        <BPrev pageMax={total}/>
-        <BNext pageMax={total}/>
+      <div className="flex justify-between p-4 w-56">
+        <button
+          className="btn btn-primary"
+          onClick={handlePrev}
+          disabled={page <= 1}
+        >
+          Prev
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={handleNext}
+          disabled={page >= total}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
