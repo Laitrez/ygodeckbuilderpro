@@ -4,44 +4,46 @@ import { useDispatch, useStore, useSelector } from "react-redux";
 import { setPage } from "../services/ygo.reducer";
 
 
-
-        {/* <button className="btn btn-primary">Primary</button> */}
-        {/* <button className="btn btn-primary">Primary</button> */}
-export const BNext = ({pageMax}) => {
-  let page = useSelector((state) => state.search.page);
+export const BNext = ({ pageMax, onClick }) => {
   const dispatch = useDispatch();
-  // useEffect(() => console.log('page : ',pageMax));
-  // console.log(pageMax);
-  let payload = {
-    pageTest: page + 1,
-    pageMax: pageMax,
+  const { page } = useSelector((state) => state.search);
+
+  const handleNext = () => {
+    if (page < pageMax) {
+      onClick(); // Signalement du clic manuel
+      dispatch(setPage({ pageTest: page + 1, pageMax }));
+    }
   };
+
   return (
     <button
       className="btn btn-primary"
-      page={page}
-      onClick={() => dispatch(setPage(payload))}
+      onClick={handleNext}
+      disabled={page >= pageMax}
     >
-      NEXT
+      Next
     </button>
   );
 };
 
-//
-export const BPrev = ({pageMax}) => {
-  let page = useSelector((state) => state.search.page);
+export const BPrev = ({ pageMax, onClick }) => {
   const dispatch = useDispatch();
-  let pagination = {
-    pageTest: page - 1,
-    pageMax: pageMax,
+  const { page } = useSelector((state) => state.search);
+
+  const handlePrev = () => {
+    if (page > 1) {
+      onClick(); // Signalement du clic manuel
+      dispatch(setPage({ pageTest: page - 1, pageMax }));
+    }
   };
+
   return (
     <button
       className="btn btn-primary"
-      page={page}
-      onClick={() => dispatch(setPage(pagination))}
+      onClick={handlePrev}
+      disabled={page <= 1}
     >
-      PREV
+      Prev
     </button>
   );
 };

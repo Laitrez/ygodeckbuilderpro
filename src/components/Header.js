@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBox from "./SearchBarre";
+import SearchBox from "./SearchBox";
 
 const Header = () => {
   return (
