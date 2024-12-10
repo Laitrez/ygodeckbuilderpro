@@ -10,7 +10,7 @@ export const BNext = ({ pageMax, onClick }) => {
 
   const handleNext = () => {
     if (page < pageMax) {
-      onClick(); // Signalement du clic manuel
+      onClick(); 
       dispatch(setPage({ pageTest: page + 1, pageMax }));
     }
   };
@@ -32,7 +32,7 @@ export const BPrev = ({ pageMax, onClick }) => {
 
   const handlePrev = () => {
     if (page > 1) {
-      onClick(); // Signalement du clic manuel
+      onClick(); 
       dispatch(setPage({ pageTest: page - 1, pageMax }));
     }
   };

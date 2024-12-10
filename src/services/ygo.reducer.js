@@ -12,13 +12,13 @@ export const ygoReducer = createSlice({
       state.value = payload;
     },
     setPage: (state, { payload }) => {
-      // console.log("PageTest: ", payload.pageTest);
+      console.log("PageTest: ", payload.pageTest);
       if (payload.pageTest > 0 && payload.pageTest <= payload.pageMax) {
         state.page = payload.pageTest;
       } else {
-        // console.log("Page number out of bounds");
+        console.log("Page number out of bounds");
       }
-      // console.log("Updated Page in Reducer:", state.page); // Debug log
+      console.log("Updated Page in Reducer:", state.page); // Debug log
     },
     setC: (state, { payload }) => {
       state.context = payload;
