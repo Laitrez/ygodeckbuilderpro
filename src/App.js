@@ -7,7 +7,18 @@ function App() {
     <>
       <Layout>
         {/* Ici mes routes */}
-        <Cardlist/>
+        <div className=" flex h-full flex-1 relative">
+          <div className=" flex-1">
+            <Cardlist />
+            </div>
+          <div
+            className="bg-green-500  w-10"
+            style={{ width: "clamp(20px, 33%, 800px)" }}
+          >
+            
+
+          </div>
+        </div>
       </Layout>
     </>
   );
