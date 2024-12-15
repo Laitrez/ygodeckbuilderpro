@@ -8,10 +8,10 @@ const Cardlist = () => {
   const [error, setError] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [previousPage, setPreviousPage] = useState(1); 
+  const [previousPage, setPreviousPage] = useState(1);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
-
-  const { value: searchTerm, context } = useSelector((state) => state.search);
+  const [searchTerm, setSearchTerme] = useState("");
+  const { value: searchImput, context } = useSelector((state) => state.search);
 
   const fetchCards = async () => {
     try {
@@ -27,7 +27,7 @@ const Cardlist = () => {
 
       // Enregistrer la page actuelle avant de changer de page
       if (!searchTerm) {
-        setPreviousPage(currentPage); 
+        setPreviousPage(currentPage);
       }
     } catch {
       setError(true);
@@ -35,25 +35,27 @@ const Cardlist = () => {
   };
 
   useEffect(() => {
-    if (debounceTimeout) clearTimeout(debounceTimeout);
-    const timeout = setTimeout(() => fetchCards(), 1000);
-    setDebounceTimeout(timeout);
 
-    return () => clearTimeout(timeout);
+    // if (debounceTimeout) clearTimeout(debounceTimeout);
+    // const timeout = setTimeout(() => fetchCards(), 1000);
+    // setDebounceTimeout(timeout);
+    fetchCards();
   }, [searchTerm, currentPage, context]);
-
-  useEffect(() => {
-    if (!searchTerm) {
-      setCurrentPage(previousPage); 
-    } else {
-      setCurrentPage(1); 
-    }
-  }, [searchTerm, previousPage]);
-
   
+  useEffect(() => {
+
+        setCurrentPage(!searchImput ? previousPage : 1);
+        if (debounceTimeout) clearTimeout(debounceTimeout);
+        
+        // on va set le searhterme apres un delai de 300 mili
+        setDebounceTimeout(setTimeout(() => setSearchTerme(searchImput), 300));
+        console.log(debounceTimeout);
+
+        return () => clearTimeout(debounceTimeout);
+      }, [searchImput]);
+
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage); 
-    fetchCards(); 
+    setCurrentPage(newPage);
   };
 
   // Composant pour afficher une carte
@@ -84,11 +86,11 @@ const Cardlist = () => {
             <Card key={card.id} card={card} />
           ))}
         </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </>
   );
