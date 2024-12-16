@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as api from "../services/api";
 import Pagination from "./Pagination"; // Import du composant de pagination
 
-const Cardlist = () => {
+const Cardlist = ({setSelectedCard}) => {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
@@ -16,18 +16,20 @@ const Cardlist = () => {
   const fetchCards = async () => {
     try {
       const fetchedCards = searchTerm
-        ? await api.getBySearch(searchTerm, currentPage, 30)
+        ? await api.getBySearch(searchTerm, currentPage, 50)
         : context
         ? await api.getCard(currentPage, context)
-        : await api.getCardPaginated(currentPage, 30);
+        : await api.getCardPaginated(currentPage, 50);
 
       setCards(fetchedCards.cards);
+      // console.log(fetchedCards.cards);
       setTotalPages(fetchedCards.totalPages);
       setError(false);
 
       // Enregistrer la page actuelle avant de changer de page
       if (!searchTerm) {
         setPreviousPage(currentPage);
+        // console.log('absence de searTerm : ',previousPage);
       }
     } catch {
       setError(true);
@@ -43,13 +45,13 @@ const Cardlist = () => {
   }, [searchTerm, currentPage, context]);
   
   useEffect(() => {
-
-        setCurrentPage(!searchImput ? previousPage : 1);
+    
+        // setCurrentPage(!searchImput ? previousPage : 1);
         if (debounceTimeout) clearTimeout(debounceTimeout);
         
         // on va set le searhterme apres un delai de 300 mili
-        setDebounceTimeout(setTimeout(() => setSearchTerme(searchImput), 300));
-        console.log(debounceTimeout);
+        setDebounceTimeout(setTimeout(() => setSearchTerme(searchImput), 1000));
+        // console.log(debounceTimeout);
 
         return () => clearTimeout(debounceTimeout);
       }, [searchImput]);
@@ -63,10 +65,16 @@ const Cardlist = () => {
     <a
       href="#"
       className="card w-32 h-fit bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
+      onClick={(e)=>{
+        e.preventDefault();
+        // console.log(card);
+        setSelectedCard(card);
+      }}
+    
     >
       <figure>
         <img
-          src={`https://images.ygoprodeck.com/images/cards/${card.ygo_id}.jpg`}
+          src={`https://images.ygoprodeck.com/images/cards_small/${card.ygo_id}.jpg`}
           alt={card.name}
           className="w-full h-full object-cover"
         />
@@ -80,8 +88,8 @@ const Cardlist = () => {
   return (
     <>
       <Error />
-      <div className="flex flex-col h-full justify-center items-center">
-        <div className="flex-grow flex flex-wrap justify-center">
+      <div className="flex flex-col h-full justify-between items-center">
+        <div className="flex-gro flex flex-wrap justify-center">
           {cards.map((card) => (
             <Card key={card.id} card={card} />
           ))}
