@@ -28,7 +28,9 @@ const Cardlist = ({setSelectedCard}) => {
 
       // Enregistrer la page actuelle avant de changer de page
       if (!searchTerm) {
+        console.log('set previous page : ',currentPage)
         setPreviousPage(currentPage);
+
         // console.log('absence de searTerm : ',previousPage);
       }
     } catch {
@@ -47,13 +49,48 @@ const Cardlist = ({setSelectedCard}) => {
   useEffect(() => {
     
         // setCurrentPage(!searchImput ? previousPage : 1);
+        // if (!searchImput) {
+        //   console.log('No searchImput set current page', currentPage);
+        //   setCurrentPage( previousPage) 
+        // }else{
+        //   console.log('searchImput set current page', currentPage);
+        //   setCurrentPage(1) 
+
+        // }  
+
         if (debounceTimeout) clearTimeout(debounceTimeout);
         
         // on va set le searhterme apres un delai de 300 mili
-        setDebounceTimeout(setTimeout(() => setSearchTerme(searchImput), 1000));
+        // setDebounceTimeout(setTimeout(() => setSearchTerme(searchImput), 1000));
         // console.log(debounceTimeout);
 
+        
+        // const timeout = setTimeout(() => {
+        //   setSearchTerme(searchImput);
+        //   if (searchImput) {
+        //     console.log("Search : 1");
+        //     setCurrentPage(1); 
+        //   } else {
+        //     console.log("No search input: ", previousPage);
+        //     setCurrentPage(previousPage);
+        //   }
+        // }, 1000);
+        setDebounceTimeout(setTimeout(() => {
+          setSearchTerme(searchImput);
+          if (searchImput) {
+            console.log("Search : 1");
+            setCurrentPage(1); 
+          } else {
+            console.log("No search input: ", previousPage);
+            setCurrentPage(previousPage);
+          }
+        }, 1000));
+      
+        // setDebounceTimeout(timeout);
+        
+        
         return () => clearTimeout(debounceTimeout);
+        // return () => clearTimeout(timeout);
       }, [searchImput]);
 
   const handlePageChange = (newPage) => {
