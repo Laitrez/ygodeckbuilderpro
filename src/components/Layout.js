@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
+import Deck from "./Deck";
 
 const Layout = ({ children }) => {
   return (
@@ -14,9 +15,7 @@ const Layout = ({ children }) => {
           style={{ width: "clamp(20px, 33%, 800px)" }}
         >
           <div className="flex-1 flex flex-col space-y-2 p-4">
-            <p className="text-white">hello</p>
-            <p className="text-white">WORLD</p>
-            <p className="text-white">AIE AIE</p>
+            <Deck/>
           </div>
         </div>
 
