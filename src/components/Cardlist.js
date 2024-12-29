@@ -82,6 +82,7 @@ const Cardlist = ({setSelectedCard}) => {
       event.preventDefault(); // Empêche le menu contextuel par défaut
   
       // Ajout de la carte au deck
+      
       dispatch(addCard({ card, isExtraDeck: extraDeckList.includes(card.type.type) }));
       console.log('extraDeck : ',extraDeckList.includes(card.type.type));
       console.log('type : ',card);
