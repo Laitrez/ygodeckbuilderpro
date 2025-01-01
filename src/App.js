@@ -3,14 +3,15 @@ import "./App.css";
 import Cardlist from "./components/Cardlist";
 import VisuCard from "./components/VisuCard";
 import CardLayout from "./components/CardLayout";
+import { useState } from "react";
 
 
 
 function App() {
-
+  const [selectedCard, setSelectedCard] = useState(null);
   return (
     <>
-      <Layout>
+      <Layout selectedCard={selectedCard} setSelectedCard={setSelectedCard}>
         {/* Ici mes routes */}
         {/* <div className=" flex h-full flex-1 relative">
           <div className=" flex-1">
@@ -24,7 +25,7 @@ function App() {
 
           </div>
         </div> */}
-        <CardLayout/>
+        <CardLayout selectedCard={selectedCard} setSelectedCard={setSelectedCard}/>
       </Layout>
     </>
   );

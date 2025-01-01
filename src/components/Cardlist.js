@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as api from "../services/api";
 import Pagination from "./Pagination"; // Import du composant de pagination
 import { addCard } from '../services/ygo.deckSlice';
+import { Card } from "./Card";
 
 const Cardlist = ({setSelectedCard}) => {
   const [cards, setCards] = useState([]);
@@ -76,40 +77,40 @@ const Cardlist = ({setSelectedCard}) => {
   };
 
   // Composant pour afficher une carte
-  const Card = ({ card }) => {
+//   const Card = ({ card }) => {
     
-    const handleContextMenu = (event) => {
-      event.preventDefault(); // Empêche le menu contextuel par défaut
+//     const handleContextMenu = (event) => {
+//       event.preventDefault(); // Empêche le menu contextuel par défaut
   
-      // Ajout de la carte au deck
+//       // Ajout de la carte au deck
       
-      dispatch(addCard({ card, isExtraDeck: extraDeckList.includes(card.type.type) }));
-      console.log('extraDeck : ',extraDeckList.includes(card.type.type));
-      console.log('type : ',card);
-    };
+//       dispatch(addCard({ card, isExtraDeck: extraDeckList.includes(card.type.type) }));
+//       console.log('extraDeck : ',extraDeckList.includes(card.type.type));
+//       console.log('type : ',card);
+//     };
     
-    return (
-    <div
-      className="card w-32 h-fit bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
-      onClick={(e)=>{
-        e.preventDefault();
-        // console.log(card);
-        setSelectedCard(card);
-      }
-    }
-    onContextMenu={handleContextMenu}
+//     return (
+//     <div
+//       className="card w-32 h-fit bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
+//       onClick={(e)=>{
+//         e.preventDefault();
+//         // console.log(card);
+//         setSelectedCard(card);
+//       }
+//     }
+//     onContextMenu={handleContextMenu}
     
-    >
-      <figure>
-        <img
-          src={`https://images.ygoprodeck.com/images/cards_small/${card.ygo_id}.jpg`}
-          alt={card.name}
-          className="w-full h-full object-cover"
-        />
-      </figure>
-    </div>
-  );
-};
+//     >
+//       <figure>
+//         <img
+//           src={`https://images.ygoprodeck.com/images/cards_small/${card.ygo_id}.jpg`}
+//           alt={card.name}
+//           className="w-full h-full object-cover"
+//         />
+//       </figure>
+//     </div>
+//   );
+// };
 
   // Composant pour gérer les erreurs
   const Error = () => error && <p>Il y a une erreur</p>;
@@ -120,7 +121,7 @@ const Cardlist = ({setSelectedCard}) => {
       <div className="flex flex-col h-full justify-between items-center">
         <div className="flex-gro flex flex-wrap justify-center">
           {cards.map((card) => (
-            <Card key={card.id} card={card} />
+            <Card key={card.id} card={card} setSelectedCard={setSelectedCard}/>
           ))}
         </div>
         <Pagination

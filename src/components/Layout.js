@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import Deck from "./Deck";
 
-const Layout = ({ children }) => {
+const Layout = ({ children,selectedCard,setSelectedCard }) => {
   return (
     <div className="min-h-screen flex flex-col ">
       <Header />
@@ -14,8 +14,8 @@ const Layout = ({ children }) => {
           className="menu  bg-black flex flex-col"
           style={{ width: "clamp(20px, 33%, 800px)" }}
         >
-          <div className="flex-1 flex flex-col space-y-2 p-4">
-            <Deck/>
+          <div className="flex-1 flex flex-col space-y-2 p-4 with-full">
+            <Deck setSelectedCard={setSelectedCard}/>
           </div>
         </div>
 

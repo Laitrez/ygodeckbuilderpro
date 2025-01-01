@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import CardList from './Cardlist';  
 import VisuCard from './VisuCard';  
 
-const CardLayout = () => {
-  const [selectedCard, setSelectedCard] = useState(null); // Hook useState pour gérer la carte sélectionnée
+const CardLayout = ({selectedCard,setSelectedCard}) => {
+  // const [selectedCard, setSelectedCard] = useState(null); // Hook useState pour gérer la carte sélectionnée
 
   return (
     <div className="flex h-full flex-1 relative">
