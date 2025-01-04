@@ -18,7 +18,7 @@ const Deck = ({setSelectedCard}) => {
   return (
     <div className="deck-container text-white p-4">
       <h2>Deck Principal ({mainDeck.length}/60)</h2>
-      <div className='flex flex-grow width-full'>
+      <div className='flex flex-grow flex-wrap width-full'>
         {mainDeck.map((card) => (
           // <li key={card.id}>
           //   {card.name} (x{mainDeck.filter((c) => c.id === card.id).length})

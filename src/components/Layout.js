@@ -31,4 +31,4 @@ const Layout = ({ children,selectedCard,setSelectedCard }) => {
   );
 };
 
-export default Layout;
+export default Layout; 
