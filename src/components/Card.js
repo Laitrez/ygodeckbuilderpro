@@ -1,20 +1,26 @@
 import { useDispatch } from "react-redux";
 import { addCard,removeCard  } from "../services/ygo.deckSlice";
 
-export const Card = ({ card,setSelectedCard, remove, isExtraDeck }) => {
+export const Card = ({ card,setSelectedCard,onContextMethod }) => {
     const dispatch = useDispatch();
     const extraDeckList=['Link Monster','Fusion Monster','XYZ Monster','Synchro Tuner Monster'];
     
-    const handleContextMenu = (event) => {
+    const handleContextMenu = (event) => {    
+      
+
+
+
       event.preventDefault(); // Empêche le menu contextuel par défaut
+      onContextMethod();
   
-      // Ajout de la carte au deck
-      remove ? 
-      dispatch(removeCard({cardId:card.id,isExtraDeck}))
-      :
-      dispatch(addCard({ card, isExtraDeck: extraDeckList.includes(card.type.type) }));
-      // console.log('extraDeck : ',extraDeckList.includes(card.type.type));
-      // console.log('type : ',card);
+      // // Ajout de la carte au deck
+      // remove2 ? 
+      // remove2()
+      // // dispatch(removeCard({cardId:card.id,isExtraDeck}))
+      // :
+      // dispatch(addCard({ card, isExtraDeck: extraDeckList.includes(card.type.type) }));
+      // // console.log('extraDeck : ',extraDeckList.includes(card.type.type));
+      // // console.log('type : ',card);
     };
     
     return (
