@@ -36,7 +36,7 @@ const Cardlist = ({setSelectedCard}) => {
 
       // Enregistrer la page actuelle avant de changer de page
       if (!searchTerm) {
-        console.log('set previous page : ',currentPage)
+        // console.log('set previous page : ',currentPage)
         setPreviousPage(currentPage);
 
         // console.log('absence de searTerm : ',previousPage);
@@ -60,10 +60,10 @@ const Cardlist = ({setSelectedCard}) => {
         setDebounceTimeout(setTimeout(() => {
           setSearchTerme(searchImput);
           if (searchImput) {
-            console.log("Search : 1");
+            // console.log("Search : 1");
             setCurrentPage(1); 
           } else {
-            console.log("No search input: ", previousPage);
+            // console.log("No search input: ", previousPage);
             setCurrentPage(previousPage);
           }
         }, 1000));

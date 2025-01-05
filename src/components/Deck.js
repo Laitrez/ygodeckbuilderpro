@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeCard, clearDeck } from '../services/ygo.deckSlice';
 import { Card } from './Card';
@@ -8,12 +8,19 @@ const Deck = ({setSelectedCard}) => {
   const dispatch = useDispatch();
 
   const handleRemoveCard = (cardId, isExtraDeck) => {
+    console.log('Removing card:', cardId, 'IsExtraDeck:', isExtraDeck);
     dispatch(removeCard({ cardId, isExtraDeck }));
   };
 
   const handleClearDeck = () => {
     dispatch(clearDeck());
   };
+
+  useEffect(() => {
+    console.log('Updated mainDeck:', mainDeck);
+    console.log('Updated extraDeck:', extraDeck);
+}, [mainDeck, extraDeck]);
+
 
   return (
     <div className="deck-container text-white p-4">
@@ -24,7 +31,7 @@ const Deck = ({setSelectedCard}) => {
           //   {card.name} (x{mainDeck.filter((c) => c.id === card.id).length})
           //   <button onClick={() => handleRemoveCard(card.id, false)}>Retirer</button>
           // </li>
-          <Card key={card.id} card={card} setSelectedCard={setSelectedCard}/>
+          <Card key={card.id+'deck'} card={card} setSelectedCard={setSelectedCard} remove={true} isExtraDeck={false}/>
         ))}
       </div>  
       <h2>Extra Deck ({extraDeck.length}/15)</h2>
