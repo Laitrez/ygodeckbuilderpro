@@ -30,6 +30,7 @@ const Deck = ({ setSelectedCard }) => {
           //   {card.name} (x{mainDeck.filter((c) => c.id === card.id).length})
           //   <button onClick={() => handleRemoveCard(card.id, false)}>Retirer</button>
           // </li>
+          <div className="w-24">
           <Card
             key={card.id + "deck"}
             card={card}
@@ -38,20 +39,27 @@ const Deck = ({ setSelectedCard }) => {
             remove={true}
             isExtraDeck={false}
           />
+          </div>
         ))}
       </div>
       <h2>Extra Deck ({extraDeck.length}/15)</h2>
       <div className="flex">
-        <ul>
           {extraDeck.map((card) => (
-            <li key={card.id}>
-              {card.name} (x{extraDeck.filter((c) => c.id === card.id).length})
-              <button onClick={() => handleRemoveCard(card.id, true)}>
-                Retirer
-              </button>
-            </li>
+            // <li key={card.id}>
+            //   {card.name} (x{extraDeck.filter((c) => c.id === card.id).length})
+            //   <button onClick={() => handleRemoveCard(card.id, true)}>
+            //     Retirer
+            //   </button>
+            // </li>
+            <Card
+            key={card.id + "deck"}
+            card={card}
+            setSelectedCard={setSelectedCard}
+            onContextMethod={() => handleRemoveCard(card.id, false)}
+            remove={true}
+            isExtraDeck={false}
+          />
           ))}
-        </ul>
       </div>
       <button onClick={handleClearDeck}>Vider les decks</button>
     </div>

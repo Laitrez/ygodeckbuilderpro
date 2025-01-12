@@ -25,7 +25,7 @@ export const Card = ({ card,setSelectedCard,onContextMethod }) => {
     
     return (
     <div
-      className="card w-32 h-fit bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
+      className="card  h-auto bg-base-100 shadow-xl m-3 hover:shadow-2xl transition-shadow"
       onClick={(e)=>{
         e.preventDefault();
         // console.log(card);

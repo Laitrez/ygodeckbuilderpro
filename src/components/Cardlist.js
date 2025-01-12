@@ -130,6 +130,7 @@ const Cardlist = ({ setSelectedCard }) => {
       <div className="flex flex-col h-full justify-between items-center">
         <div className="flex-gro flex flex-wrap justify-center">
           {cards.map((card) => (
+            <div className="w-32">
             <Card
               key={card.id}
               card={card}
@@ -138,6 +139,7 @@ const Cardlist = ({ setSelectedCard }) => {
                 handAddCard(card, extraDeckList.includes(card.type.type))
               }
             />
+            </div>
           ))}
         </div>
         <Pagination
