@@ -17,19 +17,42 @@ const Deck = ({ setSelectedCard }) => {
   };
 
   useEffect(() => {
-    console.log("Updated mainDeck:", mainDeck);
-    console.log("Updated extraDeck:", extraDeck);
+    // console.log("Updated mainDeck:", mainDeck);
+    // console.log("Updated extraDeck:", extraDeck);
   }, [mainDeck, extraDeck]);
+
+  const groupDeck = (decklist) => {
+    return Object.groupBy(decklist, (card) => card.id);
+  };
+
+  const groupedMainDeck = groupDeck(mainDeck);
+  const groupedExtraDeck = groupDeck(extraDeck);
+
+  console.log(groupedMainDeck);
+  console.log(groupedExtraDeck);
 
   return (
     <div className="deck-container text-white p-4">
       <h2>Deck Principal ({mainDeck.length}/60)</h2>
       <div className="flex flex-grow flex-wrap width-full">
+        {Object.entries(groupedMainDeck).map(([id, card], i) => {
+          // console.log("la", card[0].id);
+          return (
+            <div className="w-24">
+              <Card
+                key={id + "deck"}
+                card={card[0]}
+                setSelectedCard={setSelectedCard}
+                onContextMethod={() => handleRemoveCard(card[0].id, false)}
+                remove={true}
+                isExtraDeck={false}
+              />
+            </div>
+          );
+        })}
+      </div>
+      {/* <div className="flex flex-grow flex-wrap width-full">
         {mainDeck.map((card) => (
-          // <li key={card.id}>
-          //   {card.name} (x{mainDeck.filter((c) => c.id === card.id).length})
-          //   <button onClick={() => handleRemoveCard(card.id, false)}>Retirer</button>
-          // </li>
           <div className="w-24">
           <Card
             key={card.id + "deck"}
@@ -41,30 +64,25 @@ const Deck = ({ setSelectedCard }) => {
           />
           </div>
         ))}
-      </div>
+      </div> */}
       <h2>Extra Deck ({extraDeck.length}/15)</h2>
       <div className="flex">
-          {extraDeck.map((card) => (
-            // <li key={card.id}>
-            //   {card.name} (x{extraDeck.filter((c) => c.id === card.id).length})
-            //   <button onClick={() => handleRemoveCard(card.id, true)}>
-            //     Retirer
-            //   </button>
-            // </li>
+        {extraDeck.map((card) => (
+          <div className="w-24">
             <Card
-            key={card.id + "deck"}
-            card={card}
-            setSelectedCard={setSelectedCard}
-            onContextMethod={() => handleRemoveCard(card.id, false)}
-            remove={true}
-            isExtraDeck={false}
-          />
-          ))}
+              key={card.id + "deck"}
+              card={card}
+              setSelectedCard={setSelectedCard}
+              onContextMethod={() => handleRemoveCard(card.id, false)}
+              remove={true}
+              isExtraDeck={false}
+            />
+          </div>
+        ))}
       </div>
       <button onClick={handleClearDeck}>Vider les decks</button>
     </div>
   );
 };
-
 
 export default Deck;
